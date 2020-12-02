@@ -1,6 +1,7 @@
 package klient
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"testing"
@@ -25,7 +26,7 @@ func TestClient_Delete(t *testing.T) {
 			"delete non-existing resource",
 			[]byte(`{"apiVersion": "v1", "kind": "ConfigMap", "metadata": { "name": "test-delete-0" }, "data": {	"key1": "apple" } }`),
 			func(c *Client) (string, error) {
-				cm, err := c.Clientset.CoreV1().ConfigMaps("default").Get("test-delete-0", metav1.GetOptions{})
+				cm, err := c.Clientset.CoreV1().ConfigMaps("default").Get(context.Background(), "test-delete-0", metav1.GetOptions{})
 				if err != nil {
 					return "", err
 				}

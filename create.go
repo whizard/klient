@@ -1,7 +1,6 @@
 package klient
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/resource"
 )
 
@@ -32,8 +31,7 @@ func create(info *resource.Info, err error) error {
 
 	// TODO: If will be allow to do create then apply, here must be added the annotation as in Apply/Patch
 
-	options := metav1.CreateOptions{}
-	obj, err := resource.NewHelper(info.Client, info.Mapping).Create(info.Namespace, true, info.Object, &options)
+	obj, err := resource.NewHelper(info.Client, info.Mapping).Create(info.Namespace, true, info.Object)
 	if err != nil {
 		return failedTo("create", info, err)
 	}

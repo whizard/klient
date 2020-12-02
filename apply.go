@@ -42,7 +42,7 @@ func apply(info *resource.Info, err error) error {
 	}
 
 	// If it does not exists, just create it
-	current, err := resource.NewHelper(info.Client, info.Mapping).Get(info.Namespace, info.Name, info.Export)
+	current, err := resource.NewHelper(info.Client, info.Mapping).Get(info.Namespace, info.Name)
 	if err != nil {
 		if !errors.IsNotFound(err) {
 			return failedTo("retrieve current configuration", info, err)
