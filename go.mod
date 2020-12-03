@@ -1,6 +1,6 @@
-module github.com/johandry/klient
+module github.com/whizard/klient
 
-go 1.14
+go 1.15
 
 require (
 	github.com/jonboulle/clockwork v0.1.0
