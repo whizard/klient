@@ -74,7 +74,7 @@ func TestClient_Create_thenDelete(t *testing.T) {
 	}
 }
 
-func TestClient_CreateFile_thenDlete(t *testing.T) {
+func TestClient_CreateFile_thenDelete(t *testing.T) {
 	envContext := os.Getenv(contextEnvVarName)
 	envKubeconfig := os.Getenv(kubeconfigEnvVarName)
 
