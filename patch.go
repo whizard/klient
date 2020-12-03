@@ -9,7 +9,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -61,7 +60,7 @@ func patch(info *resource.Info, current runtime.Object) error {
 		if i > triesBeforeBackOff {
 			clockwork.NewRealClock().Sleep(backOffPeriod)
 		}
-		current, getErr = resource.NewHelper(info.Client, info.Mapping).Get(info.Namespace, info.Name, false)
+		current, getErr = resource.NewHelper(info.Client, info.Mapping).Get(info.Namespace, info.Name)
 		if getErr != nil {
 			return getErr
 		}
@@ -170,7 +169,7 @@ func deleteAndCreate(info *resource.Info, modified []byte) ([]byte, runtime.Obje
 
 	// TODO: make a waiter and use it
 	if err := wait.PollImmediate(1*time.Second, time.Duration(timeout), func() (bool, error) {
-		if _, err := helper.Get(info.Namespace, info.Name, false); !errors.IsNotFound(err) {
+		if _, err := helper.Get(info.Namespace, info.Name); !errors.IsNotFound(err) {
 			return false, err
 		}
 		return true, nil
@@ -188,12 +187,11 @@ func deleteAndCreate(info *resource.Info, modified []byte) ([]byte, runtime.Obje
 		return nil, nil, err
 	}
 
-	options := metav1.CreateOptions{}
-	createdObject, err := helper.Create(info.Namespace, true, versionedObject, &options)
+	createdObject, err := helper.Create(info.Namespace, true, versionedObject)
 	if err != nil {
 		// restore the original object if we fail to create the new one
 		// but still propagate and advertise error to user
-		recreated, recreateErr := helper.Create(info.Namespace, true, info.Object, &options)
+		recreated, recreateErr := helper.Create(info.Namespace, true, info.Object)
 		if recreateErr != nil {
 			err = fmt.Errorf("An error occurred force-replacing the existing object with the newly provided one. %v.\n\nAdditionally, an error occurred attempting to restore the original object: %v", err, recreateErr)
 		} else {

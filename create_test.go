@@ -1,6 +1,7 @@
 package klient
 
 import (
+	"context"
 	"os"
 	"testing"
 
@@ -22,7 +23,7 @@ func TestClient_Create_thenDelete(t *testing.T) {
 	}{
 		{"create configMap", testData["create/cm.yaml"],
 			func(c *Client) (bool, error) {
-				cm, err := c.Clientset.CoreV1().ConfigMaps("default").Get("test-create-0", metav1.GetOptions{})
+				cm, err := c.Clientset.CoreV1().ConfigMaps("default").Get(context.Background(), "test-create-0", metav1.GetOptions{})
 				if err != nil {
 					return false, err
 				}
@@ -33,11 +34,11 @@ func TestClient_Create_thenDelete(t *testing.T) {
 			envContext, envKubeconfig, false},
 		{"create configMapList", testData["create/cml.yaml"],
 			func(c *Client) (bool, error) {
-				cm0, err := c.Clientset.CoreV1().ConfigMaps("default").Get("test-create-1", metav1.GetOptions{})
+				cm0, err := c.Clientset.CoreV1().ConfigMaps("default").Get(context.Background(), "test-create-1", metav1.GetOptions{})
 				if err != nil {
 					return false, err
 				}
-				cm1, err := c.Clientset.CoreV1().ConfigMaps("default").Get("test-create-2", metav1.GetOptions{})
+				cm1, err := c.Clientset.CoreV1().ConfigMaps("default").Get(context.Background(), "test-create-2", metav1.GetOptions{})
 				if err != nil {
 					return false, err
 				}
@@ -73,7 +74,7 @@ func TestClient_Create_thenDelete(t *testing.T) {
 	}
 }
 
-func TestClient_CreateFile_thenDlete(t *testing.T) {
+func TestClient_CreateFile_thenDelete(t *testing.T) {
 	envContext := os.Getenv(contextEnvVarName)
 	envKubeconfig := os.Getenv(kubeconfigEnvVarName)
 
@@ -88,7 +89,7 @@ func TestClient_CreateFile_thenDlete(t *testing.T) {
 	}{
 		{"create 1 configMap file", []string{"./testdata/create/cm.yaml"},
 			func(c *Client) (bool, error) {
-				cm, err := c.Clientset.CoreV1().ConfigMaps("default").Get("test-create-0", metav1.GetOptions{})
+				cm, err := c.Clientset.CoreV1().ConfigMaps("default").Get(context.Background(), "test-create-0", metav1.GetOptions{})
 				if err != nil {
 					return false, err
 				}
@@ -99,11 +100,11 @@ func TestClient_CreateFile_thenDlete(t *testing.T) {
 			envContext, envKubeconfig, false},
 		{"ceate 2 configMap files", []string{"./testdata/create/cm.yaml", "./testdata/create/cml.yaml"},
 			func(c *Client) (bool, error) {
-				cm0, err := c.Clientset.CoreV1().ConfigMaps("default").Get("test-create-1", metav1.GetOptions{})
+				cm0, err := c.Clientset.CoreV1().ConfigMaps("default").Get(context.Background(), "test-create-1", metav1.GetOptions{})
 				if err != nil {
 					return false, err
 				}
-				cm1, err := c.Clientset.CoreV1().ConfigMaps("default").Get("test-create-2", metav1.GetOptions{})
+				cm1, err := c.Clientset.CoreV1().ConfigMaps("default").Get(context.Background(), "test-create-2", metav1.GetOptions{})
 				if err != nil {
 					return false, err
 				}
@@ -114,7 +115,7 @@ func TestClient_CreateFile_thenDlete(t *testing.T) {
 			envContext, envKubeconfig, false},
 		{"create secret from URL", []string{"https://raw.githubusercontent.com/johandry/klient/master/testdata/create/secret.yaml"},
 			func(c *Client) (bool, error) {
-				s, err := c.Clientset.CoreV1().Secrets("default").Get("test-secret-create-0", metav1.GetOptions{})
+				s, err := c.Clientset.CoreV1().Secrets("default").Get(context.Background(), "test-secret-create-0", metav1.GetOptions{})
 				if err != nil {
 					return false, err
 				}

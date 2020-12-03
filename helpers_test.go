@@ -1,6 +1,7 @@
 package klient
 
 import (
+	"context"
 	"log"
 	"os"
 	"strings"
@@ -55,7 +56,7 @@ func TestClient_CreateAndDeleteNamespace(t *testing.T) {
 				t.Errorf("Client.CreateNamespace() error = %v, wantErr %v", err, tt.wantCreateErr)
 			}
 
-			if _, err := c.Clientset.CoreV1().Namespaces().Get(tt.namespace, metav1.GetOptions{}); err != nil {
+			if _, err := c.Clientset.CoreV1().Namespaces().Get(context.Background(), tt.namespace, metav1.GetOptions{}); err != nil {
 				if errors.IsNotFound(err) {
 					t.Errorf("Client.CreateNamespace() failed to create the namespace %q, it was not found. Error: %v", tt.namespace, err)
 					return
